@@ -1,6 +1,7 @@
 import React from "react";
 import CheckinForm from "@/components/checkin/CheckinForm";
 import HeroSection from "@/components/checkin/HeroSection";
+import oneAiLogo from "@/assets/one-ai-logo.jpg";
 
 const Index: React.FC = () => {
   return (
@@ -8,8 +9,12 @@ const Index: React.FC = () => {
       {/* Header */}
       <header className="w-full px-4 sm:px-8 pt-6 pb-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center shadow-lg animate-glow-pulse">
-            <span className="font-bold text-lg text-primary-foreground font-display">GD</span>
+          <div className="h-12 w-12 rounded-xl overflow-hidden shadow-lg animate-glow-pulse">
+            <img 
+              src={oneAiLogo} 
+              alt="One AI Logo" 
+              className="w-full h-full object-cover"
+            />
           </div>
           <div>
             <h1 className="text-lg sm:text-2xl font-semibold font-display text-foreground">
@@ -33,9 +38,16 @@ const Index: React.FC = () => {
 
       {/* Footer */}
       <footer className="w-full px-4 sm:px-8 py-4 border-t border-border/30">
-        <p className="text-xs text-muted-foreground/50 text-center">
-          © 2024 Gêmeo Digital do Atleta. Todos os direitos reservados.
-        </p>
+        <div className="flex items-center justify-center gap-2">
+          <img 
+            src={oneAiLogo} 
+            alt="One AI" 
+            className="h-6 w-6 rounded object-cover"
+          />
+          <p className="text-xs text-muted-foreground/50">
+            © 2024 One AI - Gêmeo Digital do Atleta. Todos os direitos reservados.
+          </p>
+        </div>
       </footer>
     </div>
   );
