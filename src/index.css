@@ -15,8 +15,10 @@
     --popover: 222 47% 8%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 234 89% 74%;
+    --primary: 217 91% 60%;
     --primary-foreground: 222 47% 6%;
+    
+    --chelsea: 217 91% 55%;
 
     --secondary: 217 33% 17%;
     --secondary-foreground: 210 40% 98%;
@@ -24,7 +26,7 @@
     --muted: 217 33% 17%;
     --muted-foreground: 215 20% 65%;
 
-    --accent: 234 89% 64%;
+    --accent: 217 91% 50%;
     --accent-foreground: 210 40% 98%;
 
     --destructive: 0 84% 60%;
@@ -42,11 +44,11 @@
     /* Custom design tokens */
     --gradient-hero: linear-gradient(135deg, hsl(222 47% 4%) 0%, hsl(222 47% 8%) 50%, hsl(222 47% 4%) 100%);
     --gradient-card: linear-gradient(180deg, hsl(222 47% 10% / 0.8) 0%, hsl(222 47% 6% / 0.8) 100%);
-    --gradient-accent: linear-gradient(135deg, hsl(234 89% 64%) 0%, hsl(250 89% 74%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(217 91% 55%) 0%, hsl(217 91% 70%) 100%);
     
-    --shadow-glow: 0 0 40px hsl(234 89% 64% / 0.3);
+    --shadow-glow: 0 0 40px hsl(217 91% 55% / 0.3);
     --shadow-card: 0 25px 50px -12px hsl(0 0% 0% / 0.6);
-    --shadow-button: 0 10px 30px -5px hsl(234 89% 64% / 0.4);
+    --shadow-button: 0 10px 30px -5px hsl(217 91% 55% / 0.4);
 
     --font-display: 'Outfit', sans-serif;
     --font-body: 'Inter', sans-serif;
@@ -132,7 +134,7 @@
 
   .section-tab-active {
     @apply bg-primary text-primary-foreground border-primary shadow-sm;
-    box-shadow: 0 0 20px hsl(234 89% 64% / 0.3);
+    box-shadow: 0 0 20px hsl(217 91% 55% / 0.3);
   }
 
   .section-tab-inactive {
