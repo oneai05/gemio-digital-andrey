@@ -11,27 +11,48 @@ const HeroSection: React.FC = () => {
             <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-2xl overflow-hidden border-2 border-chelsea/50 shadow-lg">
               <img 
                 src={athletePhoto} 
-                alt="Foto do Atleta" 
+                alt="Andrey Santos" 
                 className="w-full h-full object-cover object-top"
               />
             </div>
-            <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-success border-2 border-background flex items-center justify-center">
-              <span className="text-[10px]">✓</span>
+            <div className="absolute -bottom-1 -right-1 h-6 w-6 rounded-full bg-chelsea border-2 border-background flex items-center justify-center font-bold text-xs text-foreground">
+              17
             </div>
           </div>
           <div className="flex-1">
             <p className="text-xs text-muted-foreground mb-1">Bem-vindo de volta,</p>
             <h3 className="text-lg sm:text-xl font-bold font-display text-foreground">
-              Wesley Fofana
+              Andrey Santos
             </h3>
-            <div className="flex items-center gap-2 mt-1">
+            <div className="flex flex-wrap items-center gap-2 mt-1">
               <span className="text-xs px-2 py-0.5 rounded-full bg-chelsea/20 text-chelsea border border-chelsea/30">
-                Zagueiro
+                Meio-campista
               </span>
               <span className="text-xs text-muted-foreground">
                 Chelsea FC
               </span>
             </div>
+            <div className="flex items-center gap-1 mt-2">
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-success/20 text-success">
+                🇧🇷 Brasil
+              </span>
+            </div>
+          </div>
+        </div>
+        
+        {/* Quick Stats */}
+        <div className="grid grid-cols-3 gap-2 mt-3">
+          <div className="glass-card p-2 text-center">
+            <p className="text-lg font-bold text-chelsea">20</p>
+            <p className="text-[10px] text-muted-foreground">Jogos</p>
+          </div>
+          <div className="glass-card p-2 text-center">
+            <p className="text-lg font-bold text-chelsea">876</p>
+            <p className="text-[10px] text-muted-foreground">Minutos</p>
+          </div>
+          <div className="glass-card p-2 text-center">
+            <p className="text-lg font-bold text-chelsea">1</p>
+            <p className="text-[10px] text-muted-foreground">Gol</p>
           </div>
         </div>
       </div>
@@ -42,20 +63,20 @@ const HeroSection: React.FC = () => {
       </div>
 
       <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold font-display leading-tight text-foreground">
-        Olá, Wesley!{" "}
+        Olá, Andrey!{" "}
         <span className="text-primary">Seu Gêmeo Digital está pronto.</span>
       </h2>
 
       <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
         Este check-in leva menos de 3 minutos e alimenta um modelo inteligente que
         analisa sua carga, dor, sono, estresse e contexto para gerar
-        recomendações personalizadas focadas em sua recuperação e prevenção de lesões.
+        recomendações personalizadas focadas em sua recuperação e performance.
       </p>
 
       <ul className="text-sm text-muted-foreground space-y-2">
         <li className="flex items-start gap-2">
           <span className="h-1.5 w-1.5 rounded-full bg-chelsea mt-2 shrink-0" />
-          Monitoramento específico para sua posição de zagueiro.
+          Monitoramento específico para sua posição de meio-campista box-to-box.
         </li>
         <li className="flex items-start gap-2">
           <span className="h-1.5 w-1.5 rounded-full bg-chelsea mt-2 shrink-0" />
