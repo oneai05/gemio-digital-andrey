@@ -163,6 +163,7 @@ const TypeformCheckin: React.FC = () => {
           <TypeformSlider
             value={formData.pseGlobal}
             onChange={(v) => updateField("pseGlobal", v)}
+            onAutoAdvance={handleNext}
             minLabel="Muito leve"
             maxLabel="Exaustivo"
           />
@@ -178,6 +179,7 @@ const TypeformCheckin: React.FC = () => {
           <TypeformSlider
             value={formData.pseMuscular}
             onChange={(v) => updateField("pseMuscular", v)}
+            onAutoAdvance={handleNext}
             minLabel="Nenhum"
             maxLabel="Máximo"
           />
@@ -193,6 +195,7 @@ const TypeformCheckin: React.FC = () => {
           <TypeformSlider
             value={formData.pseRespiratoria}
             onChange={(v) => updateField("pseRespiratoria", v)}
+            onAutoAdvance={handleNext}
             minLabel="Muito fácil"
             maxLabel="Ofegante"
           />
@@ -253,6 +256,7 @@ const TypeformCheckin: React.FC = () => {
             <TypeformSlider
               value={formData.intensidadeDor}
               onChange={(v) => updateField("intensidadeDor", v)}
+              onAutoAdvance={handleNext}
               minLabel="Sem dor"
               maxLabel="Máxima"
             />
@@ -299,6 +303,7 @@ const TypeformCheckin: React.FC = () => {
           <TypeformSlider
             value={formData.fadigaGeral}
             onChange={(v) => updateField("fadigaGeral", v)}
+            onAutoAdvance={handleNext}
             minLabel="Recuperado"
             maxLabel="Exausto"
           />
@@ -314,6 +319,7 @@ const TypeformCheckin: React.FC = () => {
           <TypeformSlider
             value={formData.qualidadeSono}
             onChange={(v) => updateField("qualidadeSono", v)}
+            onAutoAdvance={handleNext}
             minLabel="Péssimo"
             maxLabel="Excelente"
           />
@@ -430,6 +436,7 @@ const TypeformCheckin: React.FC = () => {
           <TypeformSlider
             value={formData.estresseHoje}
             onChange={(v) => updateField("estresseHoje", v)}
+            onAutoAdvance={handleNext}
             minLabel="Relaxado"
             maxLabel="Estressado"
           />
@@ -445,6 +452,7 @@ const TypeformCheckin: React.FC = () => {
           <TypeformSlider
             value={formData.focoConcentracao}
             onChange={(v) => updateField("focoConcentracao", v)}
+            onAutoAdvance={handleNext}
             minLabel="Disperso"
             maxLabel="Focado"
           />
@@ -460,6 +468,7 @@ const TypeformCheckin: React.FC = () => {
           <TypeformSlider
             value={formData.motivacaoTreino}
             onChange={(v) => updateField("motivacaoTreino", v)}
+            onAutoAdvance={handleNext}
             minLabel="Sem vontade"
             maxLabel="Motivado"
           />
