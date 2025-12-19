@@ -128,7 +128,7 @@ const Index: React.FC = () => {
           className="text-sm text-muted-foreground space-y-2 mb-8 text-center"
         >
           <li>• Monitoramento específico para sua posição de meio-campista box-to-box.</li>
-          <li>• Análise de carga adaptada ao calendário do Chelsea.</li>
+          <li>• Análise de carga adaptada ao seu calendário.</li>
           <li>• Relatórios automáticos para a comissão técnica.</li>
         </motion.ul>
 
