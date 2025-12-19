@@ -55,26 +55,28 @@ const TypeformSuccess: React.FC<TypeformSuccessProps> = ({ onReset }) => {
           <p className="text-2xl font-bold text-chelsea">✓</p>
           <p className="text-xs text-muted-foreground">Dados coletados</p>
         </div>
-        <div className="text-center">
-          <p className="text-2xl font-bold text-chelsea">🧠</p>
-          <p className="text-xs text-muted-foreground">IA processando</p>
-        </div>
-        <div className="text-center">
-          <p className="text-2xl font-bold text-chelsea">📊</p>
-          <p className="text-xs text-muted-foreground">Relatório gerado</p>
-        </div>
       </motion.div>
 
-      {/* Reset Button */}
-      <motion.button
+      {/* Buttons */}
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8 }}
-        onClick={onReset}
-        className="text-sm text-muted-foreground hover:text-foreground transition-colors underline"
+        className="flex flex-col gap-3 items-center"
       >
-        Fazer novo check-in
-      </motion.button>
+        <button
+          onClick={onReset}
+          className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors"
+        >
+          Voltar à página inicial
+        </button>
+        <button
+          onClick={onReset}
+          className="text-sm text-muted-foreground hover:text-foreground transition-colors underline"
+        >
+          Fazer novo check-in
+        </button>
+      </motion.div>
     </motion.div>
   );
 };
