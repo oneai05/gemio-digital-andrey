@@ -1,10 +1,10 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Slider } from "@/components/ui/slider";
 
 interface TypeformSliderProps {
   value: number;
   onChange: (value: number) => void;
+  onAutoAdvance?: () => void;
   min?: number;
   max?: number;
   step?: number;
@@ -15,12 +15,20 @@ interface TypeformSliderProps {
 const TypeformSlider: React.FC<TypeformSliderProps> = ({
   value,
   onChange,
+  onAutoAdvance,
   min = 0,
   max = 10,
   step = 1,
   minLabel,
   maxLabel,
 }) => {
+  const handleSelect = (num: number) => {
+    onChange(num);
+    if (onAutoAdvance) {
+      setTimeout(onAutoAdvance, 300);
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -40,22 +48,10 @@ const TypeformSlider: React.FC<TypeformSliderProps> = ({
         </motion.div>
       </div>
 
-      {/* Slider */}
-      <div className="space-y-3">
-        <Slider
-          value={[value]}
-          onValueChange={(vals) => onChange(vals[0])}
-          min={min}
-          max={max}
-          step={step}
-          className="py-4"
-        />
-
-        {/* Labels */}
-        <div className="flex justify-between text-sm text-muted-foreground">
-          <span>{minLabel || min}</span>
-          <span>{maxLabel || max}</span>
-        </div>
+      {/* Labels */}
+      <div className="flex justify-between text-sm text-muted-foreground px-2">
+        <span>{minLabel || min}</span>
+        <span>{maxLabel || max}</span>
       </div>
 
       {/* Quick Select Buttons */}
@@ -64,7 +60,7 @@ const TypeformSlider: React.FC<TypeformSliderProps> = ({
           <button
             key={num}
             type="button"
-            onClick={() => onChange(num)}
+            onClick={() => handleSelect(num)}
             className={`w-10 h-10 rounded-lg text-sm font-semibold transition-all ${
               value === num
                 ? "bg-primary text-primary-foreground scale-110"

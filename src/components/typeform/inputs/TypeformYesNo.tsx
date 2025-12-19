@@ -20,7 +20,7 @@ const TypeformYesNo: React.FC<TypeformYesNoProps> = ({
 }) => {
   const handleSelect = (val: "sim" | "nao") => {
     onChange(val);
-    if (onAutoAdvance && val === "nao") {
+    if (onAutoAdvance) {
       setTimeout(onAutoAdvance, 300);
     }
   };
@@ -50,7 +50,7 @@ const TypeformYesNo: React.FC<TypeformYesNoProps> = ({
               : "bg-muted text-muted-foreground"
           }`}
         >
-          Y
+          S
         </span>
         {yesLabel}
         {value === "sim" && (
