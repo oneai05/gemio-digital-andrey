@@ -45,7 +45,7 @@ const TypeformIntro: React.FC<TypeformIntroProps> = ({ onStart }) => {
           Olá, Andrey!
         </h1>
         <p className="text-lg sm:text-xl text-primary font-semibold mb-6">
-          Seu Gêmeo Digital está pronto.
+          Seu Gêmio Digital está pronto para check-in.
         </p>
         <p className="text-sm sm:text-base text-muted-foreground mb-8 leading-relaxed">
           Este check-in leva menos de 3 minutos e alimenta um modelo inteligente
