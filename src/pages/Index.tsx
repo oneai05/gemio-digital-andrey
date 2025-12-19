@@ -163,7 +163,7 @@ const Index: React.FC = () => {
             className="h-6 w-6 rounded object-cover"
           />
           <p className="text-xs text-muted-foreground/50">
-            © 2024 One AI - Gêmeo Digital do Atleta. Todos os direitos reservados.
+            © 2025 One AI - Gêmeo Digital do Atleta. Todos os direitos reservados.
           </p>
         </div>
       </footer>
