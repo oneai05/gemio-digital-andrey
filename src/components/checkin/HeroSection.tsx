@@ -1,42 +1,7 @@
 import React from "react";
 import athletePhoto from "@/assets/athlete-profile.png";
-import { Clock } from "lucide-react";
 
-interface HeroSectionProps {
-  compact?: boolean;
-}
-
-const HeroSection: React.FC<HeroSectionProps> = ({ compact = false }) => {
-  if (compact) {
-    return (
-      <div className="flex items-center justify-between w-full">
-        <div className="flex items-center gap-4">
-          <div className="relative">
-            <div className="h-12 w-12 rounded-xl overflow-hidden border-2 border-chelsea/50 shadow-lg">
-              <img
-                src={athletePhoto}
-                alt="Andrey Santos"
-                className="w-full h-full object-cover object-top"
-              />
-            </div>
-            <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-chelsea border-2 border-background flex items-center justify-center font-bold text-[10px] text-foreground">
-              17
-            </div>
-          </div>
-          <div>
-            <h3 className="text-lg font-bold font-display text-foreground">
-              Andrey Santos
-            </h3>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <Clock className="h-3 w-3" />
-              <span>Atualizado há 1 min</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
+const HeroSection: React.FC = () => {
   return (
     <section className="lg:w-5/12 space-y-6 flex flex-col justify-center">
       {/* Athlete Card */}

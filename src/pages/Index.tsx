@@ -1,21 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import CheckinForm from "@/components/checkin/CheckinForm";
 import HeroSection from "@/components/checkin/HeroSection";
-import AIDashboard from "@/components/dashboard/AIDashboard";
 import oneAiLogo from "@/assets/one-ai-logo.jpg";
-import { useN8nData } from "@/hooks/useN8nData";
-import { Button } from "@/components/ui/button";
-import { LayoutDashboard, ClipboardList } from "lucide-react";
 
 const Index: React.FC = () => {
-  const [view, setView] = useState<"checkin" | "dashboard">("checkin");
-  const { data, isLoading, loadSampleData } = useN8nData();
-
-  // Load sample data for dashboard demo
-  React.useEffect(() => {
-    loadSampleData();
-  }, [loadSampleData]);
-
   return (
     <div className="min-h-screen gradient-hero text-foreground flex flex-col">
       {/* Header */}
@@ -37,49 +25,15 @@ const Index: React.FC = () => {
             </p>
           </div>
         </div>
-
-        {/* View Toggle */}
-        <div className="flex items-center gap-2">
-          <Button
-            variant={view === "checkin" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setView("checkin")}
-            className={view === "checkin" ? "bg-chelsea hover:bg-chelsea/90" : ""}
-          >
-            <ClipboardList className="h-4 w-4 mr-2" />
-            Check-in
-          </Button>
-          <Button
-            variant={view === "dashboard" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setView("dashboard")}
-            className={view === "dashboard" ? "bg-chelsea hover:bg-chelsea/90" : ""}
-          >
-            <LayoutDashboard className="h-4 w-4 mr-2" />
-            Dashboard
-          </Button>
-        </div>
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 px-4 sm:px-8 pb-10 max-w-7xl mx-auto w-full">
-        {view === "checkin" ? (
-          /* Original Check-in Layout */
-          <div className="flex flex-col lg:flex-row gap-8">
-            <HeroSection />
-            <section className="lg:w-7/12">
-              <CheckinForm />
-            </section>
-          </div>
-        ) : (
-          /* Dashboard View */
-          <div className="space-y-6">
-            <div className="flex items-center gap-4 mb-6">
-              <HeroSection compact />
-            </div>
-            <AIDashboard data={data} isLoading={isLoading} />
-          </div>
-        )}
+      <main className="flex-1 px-4 sm:px-8 pb-10 flex flex-col lg:flex-row gap-8 max-w-6xl mx-auto w-full">
+        <HeroSection />
+
+        <section className="lg:w-7/12">
+          <CheckinForm />
+        </section>
       </main>
 
       {/* Footer */}
