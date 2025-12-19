@@ -129,7 +129,7 @@ const Index: React.FC = () => {
         >
           <li>• Monitoramento específico para sua posição de meio-campista box-to-box.</li>
           <li>• Análise de carga adaptada ao seu calendário.</li>
-          <li>• Relatórios automáticos para a comissão técnica.</li>
+          <li>• Relatórios automáticos e personalizados para o seu caso.</li>
         </motion.ul>
 
         {/* Start Button */}
