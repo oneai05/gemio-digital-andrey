@@ -9,7 +9,7 @@ const Index: React.FC = () => {
   const [showCheckin, setShowCheckin] = useState(false);
 
   if (showCheckin) {
-    return <TypeformCheckin />;
+    return <TypeformCheckin onBack={() => setShowCheckin(false)} />;
   }
 
   return (
