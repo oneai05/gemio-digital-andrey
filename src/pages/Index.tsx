@@ -85,8 +85,8 @@ const Index: React.FC = () => {
             <BarChart3 className="w-6 h-6 text-primary" />
           </div>
           <div className="flex-1 text-left">
-            <p className="font-semibold text-foreground">Ver Dashboard de Análise</p>
-            <p className="text-xs text-muted-foreground">Visualize seu risco de lesão e recomendações</p>
+            <p className="font-semibold text-foreground">Ver Dashboard de Medidas</p>
+            <p className="text-xs text-muted-foreground">Visualize suas medidas antropométricas e sua evolução</p>
           </div>
           <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
         </motion.button>
@@ -111,7 +111,7 @@ const Index: React.FC = () => {
         >
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold font-display leading-tight text-foreground mb-2">
             Olá, Andrey!{" "}
-            <span className="text-primary">Seu Gêmeo Digital está pronto.</span>
+            <span className="text-primary">Seu Gêmeo Digital está pronto para check-in.</span>
           </h2>
           <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-lg mx-auto">
             Este check-in leva menos de 3 minutos e alimenta um modelo inteligente que
