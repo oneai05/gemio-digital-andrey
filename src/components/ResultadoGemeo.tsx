@@ -12,7 +12,7 @@ const ResultadoGemeo: React.FC<ResultadoGemeoProps> = ({ onBack }) => {
   const [chatMessages, setChatMessages] = useState<Array<{ role: "user" | "assistant"; content: string }>>([
     {
       role: "assistant",
-      content: "OlÃ¡! Sou seu assistente do GÃªmeo Digital. Posso responder perguntas sobre suas anÃ¡lises e recomendaÃ§Ãµes. Como posso ajudar?"
+      content: "Olá! Sou seu assistente do Gêmeo Digital. Posso responder perguntas sobre suas análises e recomendações. Como posso ajudar?"
     }
   ]);
   const [inputMessage, setInputMessage] = useState("");
@@ -105,7 +105,7 @@ const ResultadoGemeo: React.FC<ResultadoGemeoProps> = ({ onBack }) => {
   const handleSendMessage = () => {
     if (!inputMessage.trim()) return;
 
-    // Adiciona mensagem do usuÃ¡rio
+    // Adiciona mensagem do usuário
     setChatMessages(prev => [...prev, { role: "user", content: inputMessage }]);
     
     // TODO: Integrar com IA real
@@ -113,7 +113,7 @@ const ResultadoGemeo: React.FC<ResultadoGemeoProps> = ({ onBack }) => {
     setTimeout(() => {
       setChatMessages(prev => [...prev, {
         role: "assistant",
-        content: "Entendi sua pergunta. Em breve estarei conectado ao histÃ³rico completo das suas anÃ¡lises para fornecer respostas mais precisas."
+        content: "Entendi sua pergunta. Em breve estarei conectado ao histórico completo das suas análises para fornecer respostas mais precisas."
       }]);
     }, 1000);
 
@@ -141,10 +141,10 @@ const ResultadoGemeo: React.FC<ResultadoGemeoProps> = ({ onBack }) => {
             />
             <div>
               <h1 className="text-lg sm:text-xl font-semibold font-display">
-                Resultado do GÃªmeo Digital
+                Resultado do Gêmeo Digital
               </h1>
               <p className="text-xs text-muted-foreground">
-                AnÃ¡lises e recomendaÃ§Ãµes personalizadas
+                Análises e recomendações personalizadas
               </p>
             </div>
           </div>
@@ -153,17 +153,17 @@ const ResultadoGemeo: React.FC<ResultadoGemeoProps> = ({ onBack }) => {
 
       {/* Main Content */}
       <main className="max-w-4xl mx-auto px-4 sm:px-8 py-8">
-        {/* Data do Ãºltimo check-in */}
+        {/* Data do último check-in */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-6 flex items-center justify-center gap-2 text-sm text-muted-foreground"
         >
           <Sparkles className="w-4 h-4 text-primary" />
-          <span>Ultima analise: <strong className="text-foreground">{lastCheckInDate}</strong></span>
+          <span>Última análise: <strong className="text-foreground">{lastCheckInDate}</strong></span>
         </motion.div>
 
-        {/* Caixa de AnÃ¡lise Central */}
+        {/* Caixa de Análise Central */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -175,8 +175,8 @@ const ResultadoGemeo: React.FC<ResultadoGemeoProps> = ({ onBack }) => {
               <Sparkles className="w-6 h-6 text-primary" />
             </div>
             <div>
-              <h2 className="text-xl font-bold font-display">AnÃ¡lise Personalizada</h2>
-              <p className="text-sm text-muted-foreground">Gerada pelo seu GÃªmeo Digital</p>
+              <h2 className="text-xl font-bold font-display">Análise Personalizada</h2>
+              <p className="text-sm text-muted-foreground">Gerada pelo seu Gêmeo Digital</p>
             </div>
           </div>
 
@@ -192,7 +192,7 @@ const ResultadoGemeo: React.FC<ResultadoGemeoProps> = ({ onBack }) => {
           {/* <div className="absolute inset-0 flex items-center justify-center bg-background/50 backdrop-blur-sm rounded-xl">
             <div className="flex flex-col items-center gap-3">
               <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent" />
-              <p className="text-sm text-muted-foreground">Carregando anÃ¡lise...</p>
+              <p className="text-sm text-muted-foreground">Carregando análise...</p>
             </div>
           </div> */}
         </motion.div>
@@ -204,7 +204,7 @@ const ResultadoGemeo: React.FC<ResultadoGemeoProps> = ({ onBack }) => {
           transition={{ delay: 0.2 }}
           className="text-xs text-muted-foreground/70 text-center mt-6"
         >
-          ðŸ’¡ Use o chat no canto inferior direito para tirar dÃºvidas sobre sua anÃ¡lise
+          💡 Use o chat no canto inferior direito para tirar dúvidas sobre sua análise
         </motion.p>
       </main>
 
@@ -227,7 +227,7 @@ const ResultadoGemeo: React.FC<ResultadoGemeoProps> = ({ onBack }) => {
                 />
                 <div>
                   <h3 className="font-semibold text-sm">Assistente IA</h3>
-                  <p className="text-xs text-muted-foreground">Tire suas dÃºvidas</p>
+                  <p className="text-xs text-muted-foreground">Tire suas dúvidas</p>
                 </div>
               </div>
               <button
@@ -266,7 +266,7 @@ const ResultadoGemeo: React.FC<ResultadoGemeoProps> = ({ onBack }) => {
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
                   onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-                  placeholder="FaÃ§a uma pergunta..."
+                  placeholder="Faça uma pergunta..."
                   className="flex-1 px-4 py-2 bg-muted rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                 />
                 <button
@@ -296,6 +296,9 @@ const ResultadoGemeo: React.FC<ResultadoGemeoProps> = ({ onBack }) => {
 };
 
 export default ResultadoGemeo;
+
+
+
 
 
 
