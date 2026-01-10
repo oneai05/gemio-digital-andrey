@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Play, ArrowLeft } from "lucide-react";
 import athletePhoto from "@/assets/athlete-profile.png";
+import oneAiLogo from "@/assets/one-ai-logo.jpg";
 
 interface TypeformIntroProps {
   onStart: () => void;
@@ -103,6 +104,25 @@ const TypeformIntro: React.FC<TypeformIntroProps> = ({ onStart, onBack }) => {
         </kbd>{" "}
         para começar
       </motion.p>
+
+      {/* Footer */}
+      <motion.footer
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.9 }}
+        className="absolute bottom-0 left-0 right-0 w-full px-4 sm:px-8 py-4"
+      >
+        <div className="flex items-center justify-center gap-2">
+          <img 
+            src={oneAiLogo} 
+            alt="One AI" 
+            className="h-6 w-6 rounded object-cover"
+          />
+          <p className="text-xs text-muted-foreground/50">
+            © 2025 One AI - Gêmeo Digital do Atleta. Todos os direitos reservados.
+          </p>
+        </div>
+      </motion.footer>
     </motion.div>
   );
 };
