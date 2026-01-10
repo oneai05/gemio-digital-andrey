@@ -91,6 +91,28 @@ const TypeformIntro: React.FC<TypeformIntroProps> = ({ onStart, onBack, onNaviga
                     <p className="text-xs text-muted-foreground">Medidas antropométricas</p>
                   </div>
                 </button>
+                <div className="px-4 pb-3 -mt-2 space-y-1">
+                  <button
+                    className="w-full pl-12 pr-3 py-2 flex items-center gap-2 rounded-lg hover:bg-primary/10 transition-colors text-left text-xs text-muted-foreground hover:text-foreground"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      console.log("Navegar para Temporada 24/25");
+                    }}
+                  >
+                    <span className="h-2 w-2 rounded-full bg-primary/40" />
+                    Temporada 24/25
+                  </button>
+                  <button
+                    className="w-full pl-12 pr-3 py-2 flex items-center gap-2 rounded-lg hover:bg-primary/10 transition-colors text-left text-xs text-muted-foreground hover:text-foreground"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      console.log("Navegar para Temporada 25/26");
+                    }}
+                  >
+                    <span className="h-2 w-2 rounded-full bg-primary/40" />
+                    Temporada 25/26
+                  </button>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
