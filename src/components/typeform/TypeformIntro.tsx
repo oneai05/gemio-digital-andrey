@@ -1,20 +1,34 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Play } from "lucide-react";
+import { Play, ArrowLeft } from "lucide-react";
 import athletePhoto from "@/assets/athlete-profile.png";
 
 interface TypeformIntroProps {
   onStart: () => void;
+  onBack?: () => void;
 }
 
-const TypeformIntro: React.FC<TypeformIntroProps> = ({ onStart }) => {
+const TypeformIntro: React.FC<TypeformIntroProps> = ({ onStart, onBack }) => {
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="min-h-[100dvh] flex flex-col justify-center items-center px-6 py-12"
+      className="min-h-[100dvh] flex flex-col justify-center items-center px-6 py-12 relative"
     >
+      {/* Back Button */}
+      {onBack && (
+        <motion.button
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2 }}
+          onClick={onBack}
+          className="absolute top-6 left-6 flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span className="text-sm font-medium">Voltar</span>
+        </motion.button>
+      )}
       {/* Athlete Photo */}
       <motion.div
         initial={{ scale: 0.8, opacity: 0 }}
@@ -45,7 +59,7 @@ const TypeformIntro: React.FC<TypeformIntroProps> = ({ onStart }) => {
           Olá, Andrey!
         </h1>
         <p className="text-lg sm:text-xl text-primary font-semibold mb-6">
-          Seu Gêmio Digital está pronto para check-in.
+          Seu Gêmeo Digital está pronto para check-in.
         </p>
         <p className="text-sm sm:text-base text-muted-foreground mb-8 leading-relaxed">
           Este check-in leva menos de 3 minutos e alimenta um modelo inteligente
