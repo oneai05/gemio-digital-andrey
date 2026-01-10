@@ -1,6 +1,6 @@
-import React from "react";
-import { motion } from "framer-motion";
-import { Play, ArrowLeft } from "lucide-react";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Play, ArrowLeft, Menu, Brain, BarChart3 } from "lucide-react";
 import athletePhoto from "@/assets/athlete-profile.png";
 import oneAiLogo from "@/assets/one-ai-logo.jpg";
 
@@ -10,6 +10,8 @@ interface TypeformIntroProps {
 }
 
 const TypeformIntro: React.FC<TypeformIntroProps> = ({ onStart, onBack }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -17,6 +19,79 @@ const TypeformIntro: React.FC<TypeformIntroProps> = ({ onStart, onBack }) => {
       exit={{ opacity: 0 }}
       className="min-h-[100dvh] flex flex-col justify-center items-center px-6 py-12 relative"
     >
+      {/* Floating Menu */}
+      <div 
+        className="absolute top-6 left-6 z-50"
+        onMouseEnter={() => setIsMenuOpen(true)}
+        onMouseLeave={() => setIsMenuOpen(false)}
+      >
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2 }}
+          className="relative"
+        >
+          {/* Menu Icon */}
+          <motion.button
+            className="w-12 h-12 rounded-full bg-primary/10 backdrop-blur-sm border border-primary/20 flex items-center justify-center text-primary hover:bg-primary/20 transition-all shadow-lg"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Menu className="w-5 h-5" />
+          </motion.button>
+
+          {/* Expanded Menu */}
+          <AnimatePresence>
+            {isMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+                className="absolute top-14 left-0 w-64 bg-card/95 backdrop-blur-md border border-border rounded-xl shadow-2xl overflow-hidden"
+              >
+                {/* Resultado do Gêmeo Digital */}
+                <button
+                  className="w-full px-4 py-3 flex items-center gap-3 hover:bg-primary/10 transition-colors text-left group"
+                  onClick={() => {
+                    // TODO: Adicionar navegação para resultado
+                    console.log("Navegar para Resultado do Gêmeo Digital");
+                  }}
+                >
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                    <Brain className="w-5 h-5 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-semibold text-sm text-foreground">Resultado do Gêmeo Digital</p>
+                    <p className="text-xs text-muted-foreground">Veja análises e recomendações</p>
+                  </div>
+                </button>
+
+                {/* Divider */}
+                <div className="h-px bg-border" />
+
+                {/* Dashboard de Medidas */}
+                <button
+                  className="w-full px-4 py-3 flex items-center gap-3 hover:bg-primary/10 transition-colors text-left group"
+                  onClick={() => {
+                    // TODO: Adicionar navegação para dashboard
+                    console.log("Navegar para Dashboard de Medidas");
+                  }}
+                >
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                    <BarChart3 className="w-5 h-5 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-semibold text-sm text-foreground">Dashboard de Medidas</p>
+                    <p className="text-xs text-muted-foreground">Medidas antropométricas</p>
+                  </div>
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      </div>
+
       {/* Back Button */}
       {onBack && (
         <motion.button
