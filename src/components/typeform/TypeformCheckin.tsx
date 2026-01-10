@@ -61,9 +61,10 @@ const painLocations = [
 
 interface TypeformCheckinProps {
   onBack?: () => void;
+  onNavigateToResultado?: () => void;
 }
 
-const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack }) => {
+const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack, onNavigateToResultado }) => {
   const [step, setStep] = useState<FormStep>("intro");
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -650,7 +651,7 @@ const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack }) => {
 
       <AnimatePresence mode="wait">
         {step === "intro" && (
-          <TypeformIntro key="intro" onStart={() => setStep("questions")} onBack={onBack} />
+          <TypeformIntro key="intro" onStart={() => setStep("questions")} onBack={onBack} onNavigateToResultado={onNavigateToResultado} />
         )}
 
         {step === "questions" && currentQ && (

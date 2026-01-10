@@ -7,9 +7,10 @@ import oneAiLogo from "@/assets/one-ai-logo.jpg";
 interface TypeformIntroProps {
   onStart: () => void;
   onBack?: () => void;
+  onNavigateToResultado?: () => void;
 }
 
-const TypeformIntro: React.FC<TypeformIntroProps> = ({ onStart, onBack }) => {
+const TypeformIntro: React.FC<TypeformIntroProps> = ({ onStart, onBack, onNavigateToResultado }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -58,8 +59,8 @@ const TypeformIntro: React.FC<TypeformIntroProps> = ({ onStart, onBack }) => {
                 <button
                   className="w-full px-4 py-3 flex items-center gap-3 hover:bg-primary/10 transition-colors text-left group"
                   onClick={() => {
-                    // TODO: Adicionar navegação para resultado
-                    console.log("Navegar para Resultado do Gêmeo Digital");
+                    setIsMenuOpen(false);
+                    onNavigateToResultado?.();
                   }}
                 >
                   <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
