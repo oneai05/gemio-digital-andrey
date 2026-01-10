@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, ArrowLeft, Brain, BarChart3 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import athletePhoto from "@/assets/athlete-profile.png";
 import oneAiLogo from "@/assets/one-ai-logo.jpg";
 
@@ -12,6 +13,7 @@ interface TypeformIntroProps {
 
 const TypeformIntro: React.FC<TypeformIntroProps> = ({ onStart, onBack, onNavigateToResultado }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <motion.div
@@ -96,7 +98,7 @@ const TypeformIntro: React.FC<TypeformIntroProps> = ({ onStart, onBack, onNaviga
                     className="w-full pl-12 pr-3 py-2 flex items-center gap-2 rounded-lg hover:bg-primary/10 transition-colors text-left text-xs text-muted-foreground hover:text-foreground"
                     onClick={() => {
                       setIsMenuOpen(false);
-                      console.log("Navegar para Temporada 24/25");
+                      navigate("/dashboard-medidas/24-25");
                     }}
                   >
                     <span className="h-2 w-2 rounded-full bg-primary/40" />
@@ -106,7 +108,7 @@ const TypeformIntro: React.FC<TypeformIntroProps> = ({ onStart, onBack, onNaviga
                     className="w-full pl-12 pr-3 py-2 flex items-center gap-2 rounded-lg hover:bg-primary/10 transition-colors text-left text-xs text-muted-foreground hover:text-foreground"
                     onClick={() => {
                       setIsMenuOpen(false);
-                      console.log("Navegar para Temporada 25/26");
+                      navigate("/dashboard-medidas/25-26");
                     }}
                   >
                     <span className="h-2 w-2 rounded-full bg-primary/40" />
