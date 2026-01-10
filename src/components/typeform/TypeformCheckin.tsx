@@ -556,6 +556,9 @@ const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack }) => {
   const handlePrevious = () => {
     if (currentQuestion > 0) {
       setCurrentQuestion((prev) => prev - 1);
+    } else {
+      // Se está na primeira pergunta, volta para a tela de introdução
+      setStep("intro");
     }
   };
 
