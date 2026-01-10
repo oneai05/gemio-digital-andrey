@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, MessageCircle, X, Send, Sparkles } from "lucide-react";
 import oneAiLogo from "@/assets/one-ai-logo.jpg";
@@ -12,35 +12,100 @@ const ResultadoGemeo: React.FC<ResultadoGemeoProps> = ({ onBack }) => {
   const [chatMessages, setChatMessages] = useState<Array<{ role: "user" | "assistant"; content: string }>>([
     {
       role: "assistant",
-      content: "Olá! Sou seu assistente do Gêmeo Digital. Posso responder perguntas sobre suas análises e recomendações. Como posso ajudar?"
+      content: "OlÃ¡! Sou seu assistente do GÃªmeo Digital. Posso responder perguntas sobre suas anÃ¡lises e recomendaÃ§Ãµes. Como posso ajudar?"
     }
   ]);
   const [inputMessage, setInputMessage] = useState("");
+  const [analiseGemeo, setAnaliseGemeo] = useState<string>("");
+  const [lastCheckInDate, setLastCheckInDate] = useState<string>("...");
+  const [isLoadingAnalise, setIsLoadingAnalise] = useState(true);
+  const [analiseError, setAnaliseError] = useState<string>("");
+  const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
+  const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
+  const buildAnaliseText = (payload: Record<string, string | null>) => {
+    const sections = [
+      { title: "Treino", value: payload.treino_explicacao },
+      { title: "Recuperacao", value: payload.recuperacao_explicacao },
+      { title: "Nutricao", value: payload.nutricao_explicacao },
+      { title: "Insights Geneticos", value: payload.insights_geneticos_explicacao },
+      { title: "Monitoramento", value: payload.monitoramento_explicacao },
+    ];
 
-  // TODO: Buscar dados reais do n8n
-  const lastCheckInDate = new Date().toLocaleDateString("pt-BR", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit"
-  });
+    const lines: string[] = [];
+    sections.forEach((section) => {
+      if (!section.value) {
+        return;
+      }
+      lines.push(`${section.title}:`);
+      lines.push(section.value);
+      lines.push("");
+    });
 
-  const analiseGemeo = `Análise do Gêmeo Digital - Em breve você verá aqui as recomendações personalizadas do seu Gêmeo Digital.
+    return lines.join("\n").trim();
+  };
 
-Esta análise é atualizada automaticamente após cada check-in e considera:
-• Carga de treino e intensidade
-• Qualidade de sono e recuperação
-• Dor e desconforto muscular
-• Estado mental e motivação
-• Contexto e fatores externos
+  const fetchAnalise = useCallback(async () => {
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+      setAnaliseError("Configuracao do Supabase nao encontrada.");
+      setIsLoadingAnalise(false);
+      return;
+    }
 
-As recomendações serão geradas pelo agente inteligente baseado no seu perfil e histórico.`;
+    try {
+      setAnaliseError("");
+      const endpoint = `${SUPABASE_URL}/rest/v1/gemeo_digital_analises?athlete_id=eq.andrey_santos&select=timestamp_analise,treino_explicacao,recuperacao_explicacao,nutricao_explicacao,insights_geneticos_explicacao,monitoramento_explicacao&order=timestamp_analise.desc&limit=1`;
+      const response = await fetch(endpoint, {
+        headers: {
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        },
+      });
 
+      if (!response.ok) {
+        throw new Error(`Erro ${response.status}`);
+      }
+
+      const data = (await response.json()) as Array<Record<string, string | null>>;
+      const latest = data[0];
+
+      if (!latest) {
+        setAnaliseGemeo("Nenhuma analise encontrada ainda.");
+        setIsLoadingAnalise(false);
+        return;
+      }
+
+      const builtText = buildAnaliseText(latest);
+      setAnaliseGemeo(
+        builtText || "A analise ainda nao possui texto gerado pelo agente."
+      );
+
+      if (latest.timestamp_analise) {
+        const date = new Date(latest.timestamp_analise);
+        const formatted = date.toLocaleDateString("pt-BR", {
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        setLastCheckInDate(formatted);
+      }
+    } catch (error) {
+      setAnaliseError("Nao foi possivel carregar a analise.");
+    } finally {
+      setIsLoadingAnalise(false);
+    }
+  }, [SUPABASE_URL, SUPABASE_ANON_KEY]);
+
+  useEffect(() => {
+    fetchAnalise();
+    const interval = window.setInterval(fetchAnalise, 10000);
+    return () => window.clearInterval(interval);
+  }, [fetchAnalise]);
   const handleSendMessage = () => {
     if (!inputMessage.trim()) return;
 
-    // Adiciona mensagem do usuário
+    // Adiciona mensagem do usuÃ¡rio
     setChatMessages(prev => [...prev, { role: "user", content: inputMessage }]);
     
     // TODO: Integrar com IA real
@@ -48,7 +113,7 @@ As recomendações serão geradas pelo agente inteligente baseado no seu perfil 
     setTimeout(() => {
       setChatMessages(prev => [...prev, {
         role: "assistant",
-        content: "Entendi sua pergunta. Em breve estarei conectado ao histórico completo das suas análises para fornecer respostas mais precisas."
+        content: "Entendi sua pergunta. Em breve estarei conectado ao histÃ³rico completo das suas anÃ¡lises para fornecer respostas mais precisas."
       }]);
     }, 1000);
 
@@ -76,10 +141,10 @@ As recomendações serão geradas pelo agente inteligente baseado no seu perfil 
             />
             <div>
               <h1 className="text-lg sm:text-xl font-semibold font-display">
-                Resultado do Gêmeo Digital
+                Resultado do GÃªmeo Digital
               </h1>
               <p className="text-xs text-muted-foreground">
-                Análises e recomendações personalizadas
+                AnÃ¡lises e recomendaÃ§Ãµes personalizadas
               </p>
             </div>
           </div>
@@ -88,17 +153,17 @@ As recomendações serão geradas pelo agente inteligente baseado no seu perfil 
 
       {/* Main Content */}
       <main className="max-w-4xl mx-auto px-4 sm:px-8 py-8">
-        {/* Data do último check-in */}
+        {/* Data do Ãºltimo check-in */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-6 flex items-center justify-center gap-2 text-sm text-muted-foreground"
         >
           <Sparkles className="w-4 h-4 text-primary" />
-          <span>Última análise: <strong className="text-foreground">{lastCheckInDate}</strong></span>
+          <span>Ultima analise: <strong className="text-foreground">{lastCheckInDate}</strong></span>
         </motion.div>
 
-        {/* Caixa de Análise Central */}
+        {/* Caixa de AnÃ¡lise Central */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -110,14 +175,16 @@ As recomendações serão geradas pelo agente inteligente baseado no seu perfil 
               <Sparkles className="w-6 h-6 text-primary" />
             </div>
             <div>
-              <h2 className="text-xl font-bold font-display">Análise Personalizada</h2>
-              <p className="text-sm text-muted-foreground">Gerada pelo seu Gêmeo Digital</p>
+              <h2 className="text-xl font-bold font-display">AnÃ¡lise Personalizada</h2>
+              <p className="text-sm text-muted-foreground">Gerada pelo seu GÃªmeo Digital</p>
             </div>
           </div>
 
           <div className="prose prose-invert max-w-none">
             <div className="text-base leading-relaxed text-muted-foreground whitespace-pre-line">
-              {analiseGemeo}
+              {isLoadingAnalise && "Carregando analise..."}
+              {!isLoadingAnalise && analiseError && analiseError}
+              {!isLoadingAnalise && !analiseError && analiseGemeo}
             </div>
           </div>
 
@@ -125,7 +192,7 @@ As recomendações serão geradas pelo agente inteligente baseado no seu perfil 
           {/* <div className="absolute inset-0 flex items-center justify-center bg-background/50 backdrop-blur-sm rounded-xl">
             <div className="flex flex-col items-center gap-3">
               <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent" />
-              <p className="text-sm text-muted-foreground">Carregando análise...</p>
+              <p className="text-sm text-muted-foreground">Carregando anÃ¡lise...</p>
             </div>
           </div> */}
         </motion.div>
@@ -137,7 +204,7 @@ As recomendações serão geradas pelo agente inteligente baseado no seu perfil 
           transition={{ delay: 0.2 }}
           className="text-xs text-muted-foreground/70 text-center mt-6"
         >
-          💡 Use o chat no canto inferior direito para tirar dúvidas sobre sua análise
+          ðŸ’¡ Use o chat no canto inferior direito para tirar dÃºvidas sobre sua anÃ¡lise
         </motion.p>
       </main>
 
@@ -160,7 +227,7 @@ As recomendações serão geradas pelo agente inteligente baseado no seu perfil 
                 />
                 <div>
                   <h3 className="font-semibold text-sm">Assistente IA</h3>
-                  <p className="text-xs text-muted-foreground">Tire suas dúvidas</p>
+                  <p className="text-xs text-muted-foreground">Tire suas dÃºvidas</p>
                 </div>
               </div>
               <button
@@ -199,7 +266,7 @@ As recomendações serão geradas pelo agente inteligente baseado no seu perfil 
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
                   onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-                  placeholder="Faça uma pergunta..."
+                  placeholder="FaÃ§a uma pergunta..."
                   className="flex-1 px-4 py-2 bg-muted rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                 />
                 <button
@@ -229,4 +296,14 @@ As recomendações serão geradas pelo agente inteligente baseado no seu perfil 
 };
 
 export default ResultadoGemeo;
+
+
+
+
+
+
+
+
+
+
 
