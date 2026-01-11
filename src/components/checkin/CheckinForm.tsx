@@ -21,6 +21,8 @@ const sections = [
   "Comentário final",
 ];
 
+const webhookUrl = "https://oneai.app.n8n.cloud/webhook/athlete-analysis";
+
 const CheckinForm: React.FC = () => {
   const [activeSection, setActiveSection] = useState<string>("Informações gerais");
   const [submitting, setSubmitting] = useState(false);
@@ -49,23 +51,60 @@ const CheckinForm: React.FC = () => {
     
     try {
       const payload = {
-        ...formData,
+        athlete_id: "andrey_santos",
+        source: "checkin_form",
+        submitted_at: new Date().toISOString(),
+        tipoAtividade: formData.tipoAtividade ?? "",
+        duracaoMinutos: formData.duracaoMinutos ?? "",
+        horarioSessao: formData.horarioSessao ?? "",
+        pseGlobal: formData.pseGlobal ?? "",
+        pseMuscular: formData.pseMuscular ?? "",
+        pseRespiratoria: formData.pseRespiratoria ?? "",
+        intensidadePercebida: formData.intensidadePercebida ?? "",
         sentiuDor,
-        teveViagem,
+        locaisDor: locaisDor ?? [],
+        intensidadeDor: formData.intensidadeDor ?? "",
+        inicioDor: formData.inicioDor ?? "",
+        evolucaoDor: formData.evolucaoDor ?? "",
+        dorLimitouMovimento: formData.dorLimitouMovimento ?? "",
+        dorAfetouAcel: formData.dorAfetouAcel ?? "",
+        fadigaGeral: formData.fadigaGeral ?? "",
+        sensacaoAcordar: formData.sensacaoAcordar ?? "",
+        qualidadeSono: formData.qualidadeSono ?? "",
+        horasSono: formData.horasSono ?? "",
+        rigidezMatinal: formData.rigidezMatinal ?? "",
+        pernasHoje: formData.pernasHoje ?? "",
+        hidratacao: formData.hidratacao ?? "",
+        corUrina: formData.corUrina ?? "",
+        refeicaoPreTreino: formData.refeicaoPreTreino ?? "",
         cafeina,
+        ingestaoProteica: formData.ingestaoProteica ?? "",
+        horarioCafeina: formData.horarioCafeina ?? "",
+        estresseHoje: formData.estresseHoje ?? "",
+        ansiedadePreTreino: formData.ansiedadePreTreino ?? "",
+        focoConcentracao: formData.focoConcentracao ?? "",
+        motivacaoTreino: formData.motivacaoTreino ?? "",
+        teveViagem,
+        horasViagem: formData.horasViagem ?? "",
+        mudancaFuso: formData.mudancaFuso ?? "",
+        climaSessao: formData.climaSessao ?? "",
+        superficie: formData.superficie ?? "",
         estresseExterno,
-        locaisDor,
-        submittedAt: new Date().toISOString(),
+        descricaoEstresseExterno: formData.descricaoEstresseExterno ?? "",
+        comentarioLivre: formData.comentarioLivre ?? "",
       };
 
       console.log("Form payload:", payload);
 
-      // TODO: Integrate with n8n webhook
-      // await fetch("https://SEU-WEBHOOK-N8N.aqui", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify(payload),
-      // });
+      const response = await fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Webhook error: ${response.status}`);
+      }
 
       toast({
         title: "Check-in enviado!",
