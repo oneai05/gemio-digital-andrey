@@ -1,0 +1,9 @@
+project_id = "ivwyorkbdnibhdzlouoe"
+
+[functions.chat-assistente]
+verify_jwt = false
+
+[functions.chat-assistente-v2]
+verify_jwt = false
+
+

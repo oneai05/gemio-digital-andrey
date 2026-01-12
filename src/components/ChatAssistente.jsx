@@ -10,9 +10,7 @@ export const ChatAssistente = () => {
   const [ultimaAnalise, setUltimaAnalise] = useState(null);
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
   const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-  const functionUrl = supabaseUrl
-    ? `${supabaseUrl}/functions/v1/chat-assistente`
-    : "";
+  const functionUrl = supabaseUrl ? `${supabaseUrl}/functions/v1/chat-assistente-v2` : "";
 
   // Buscar ultima analise do Supabase
   useEffect(() => {
@@ -89,7 +87,10 @@ CONTEXTO ATUAL DO ANDREY (ultima analise):
 
       const data = await response.json();
 
-      const aiMessage = { role: "assistant", content: data.response };
+      const aiMessage = {
+        role: "assistant",
+        content: data.response ?? data.error ?? "Erro ao responder.",
+      };
       setMessages((prev) => [...prev, aiMessage]);
     } catch (error) {
       console.error("Erro no chat:", error);
