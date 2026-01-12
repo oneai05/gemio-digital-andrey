@@ -9,8 +9,11 @@ export const ChatAssistente = () => {
   const [loading, setLoading] = useState(false);
   const [ultimaAnalise, setUltimaAnalise] = useState(null);
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-  const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+  const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
   const functionUrl = supabaseUrl ? `${supabaseUrl}/functions/v1/chat-assistente-v2` : "";
+
+  // Debug logging
+  console.log("Chat config:", { supabaseUrl, hasKey: !!supabaseAnonKey, functionUrl });
 
   // Buscar ultima analise do Supabase
   useEffect(() => {
@@ -78,6 +81,7 @@ CONTEXTO ATUAL DO ANDREY (ultima analise):
       `
         : "";
 
+      console.log("Sending request to:", functionUrl);
       const response = await fetch(functionUrl, {
         method: "POST",
         headers: {
@@ -91,6 +95,8 @@ CONTEXTO ATUAL DO ANDREY (ultima analise):
           conversaAnterior: messages.slice(-6),
         }),
       });
+
+      console.log("Response status:", response.status);
 
       const data = await response.json();
       const content =
