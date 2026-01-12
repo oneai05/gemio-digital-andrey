@@ -52,7 +52,7 @@ const painLocations = [
   "Anterior coxa",
   "Adutores",
   "Panturrilha",
-  "GlÃºteo",
+  "Glúteo",
   "Lombar",
   "Tornozelo",
   "Joelho",
@@ -122,7 +122,7 @@ const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack, onNavigateToR
         title: "Qual foi o tipo de atividade de hoje?",
         render: () => (
           <TypeformSelect
-            options={["Treino", "Jogo", "Regenerativo", "ForÃ§a", "TÃ©cnico/TÃ¡tico", "Outro"]}
+            options={["Treino", "Jogo", "Regenerativo", "Força", "Técnico/Tático", "Outro"]}
             value={formData.tipoAtividade}
             onChange={(v) => updateField("tipoAtividade", v)}
             onAutoAdvance={handleNext}
@@ -130,10 +130,10 @@ const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack, onNavigateToR
         ),
         canProceed: () => !!formData.tipoAtividade,
       },
-      // 2. DuraÃ§Ã£o
+      // 2. Duração
       {
         id: "duracaoMinutos",
-        title: "Qual foi a duraÃ§Ã£o total da sessÃ£o?",
+        title: "Qual foi a duração total da sessão?",
         subtitle: "Em minutos",
         render: () => (
           <TypeformNumber
@@ -146,13 +146,13 @@ const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack, onNavigateToR
         ),
         canProceed: () => !!formData.duracaoMinutos,
       },
-      // 3. HorÃ¡rio
+      // 3. Horário
       {
         id: "horarioSessao",
-        title: "Em qual horÃ¡rio foi a sessÃ£o?",
+        title: "Em qual horário foi a sessão?",
         render: () => (
           <TypeformSelect
-            options={["ManhÃ£", "Tarde", "Noite"]}
+            options={["Manhã", "Tarde", "Noite"]}
             value={formData.horarioSessao}
             onChange={(v) => updateField("horarioSessao", v)}
             onAutoAdvance={handleNext}
@@ -163,7 +163,7 @@ const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack, onNavigateToR
       // 4. PSE Global
       {
         id: "pseGlobal",
-        title: "Como vocÃª avalia o esforÃ§o global da sessÃ£o?",
+        title: "Como você avalia o esforço global da sessão?",
         subtitle: "0 = muito leve, 10 = exaustivo",
         render: () => (
           <TypeformSlider
@@ -179,30 +179,30 @@ const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack, onNavigateToR
       // 5. PSE Muscular
       {
         id: "pseMuscular",
-        title: "E o esforÃ§o muscular?",
-        subtitle: "0 = nenhum esforÃ§o, 10 = mÃ¡ximo",
+        title: "E o esforço muscular?",
+        subtitle: "0 = nenhum esforço, 10 = máximo",
         render: () => (
           <TypeformSlider
             value={formData.pseMuscular}
             onChange={(v) => updateField("pseMuscular", v)}
             onAutoAdvance={handleNext}
             minLabel="Nenhum"
-            maxLabel="MÃ¡ximo"
+            maxLabel="Máximo"
           />
         ),
         canProceed: () => true,
       },
-      // 6. PSE RespiratÃ³ria
+      // 6. PSE Respiratória
       {
         id: "pseRespiratoria",
-        title: "E o esforÃ§o respiratÃ³rio?",
-        subtitle: "0 = muito fÃ¡cil, 10 = exausto/ofegante",
+        title: "E o esforço respiratório?",
+        subtitle: "0 = muito fácil, 10 = exausto/ofegante",
         render: () => (
           <TypeformSlider
             value={formData.pseRespiratoria}
             onChange={(v) => updateField("pseRespiratoria", v)}
             onAutoAdvance={handleNext}
-            minLabel="Muito fÃ¡cil"
+            minLabel="Muito fácil"
             maxLabel="Ofegante"
           />
         ),
@@ -211,7 +211,7 @@ const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack, onNavigateToR
       // 7. Intensidade percebida
       {
         id: "intensidadePercebida",
-        title: "Como vocÃª classificaria a intensidade geral?",
+        title: "Como você classificaria a intensidade geral?",
         render: () => (
           <TypeformSelect
             options={["Muito leve", "Leve", "Moderada", "Intensa", "Muito intensa", "Exaustiva"]}
@@ -225,7 +225,7 @@ const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack, onNavigateToR
       // 8. Sentiu dor?
       {
         id: "sentiuDor",
-        title: "VocÃª sentiu dor ou desconforto hoje?",
+        title: "Você sentiu dor ou desconforto hoje?",
         render: () => (
           <TypeformYesNo
             value={formData.sentiuDor}
@@ -243,7 +243,7 @@ const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack, onNavigateToR
       questions.push(
         {
           id: "locaisDor",
-          title: "Onde vocÃª sentiu dor?",
+          title: "Onde você sentiu dor?",
           subtitle: "Marque todos os locais que se aplicam",
           render: () => (
             <TypeformMultiSelect
@@ -257,24 +257,24 @@ const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack, onNavigateToR
         {
           id: "intensidadeDor",
           title: "Qual a intensidade da dor?",
-          subtitle: "0 = sem dor, 10 = dor mÃ¡xima",
+          subtitle: "0 = sem dor, 10 = dor máxima",
           render: () => (
             <TypeformSlider
               value={formData.intensidadeDor}
               onChange={(v) => updateField("intensidadeDor", v)}
               onAutoAdvance={handleNext}
               minLabel="Sem dor"
-              maxLabel="MÃ¡xima"
+              maxLabel="Máxima"
             />
           ),
           canProceed: () => true,
         },
         {
           id: "inicioDor",
-          title: "Quando a dor comeÃ§ou?",
+          title: "Quando a dor começou?",
           render: () => (
             <TypeformSelect
-              options={["Hoje", "Ontem", "HÃ¡ mais de 2 dias", "CrÃ´nica / recorrente"]}
+              options={["Hoje", "Ontem", "Há mais de 2 dias", "Crônica / recorrente"]}
               value={formData.inicioDor}
               onChange={(v) => updateField("inicioDor", v)}
               onAutoAdvance={handleNext}
@@ -284,7 +284,7 @@ const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack, onNavigateToR
         },
         {
           id: "evolucaoDor",
-          title: "Como a dor estÃ¡ evoluindo?",
+          title: "Como a dor está evoluindo?",
           render: () => (
             <TypeformSelect
               options={["Piorando", "Igual", "Melhorando"]}
@@ -303,7 +303,7 @@ const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack, onNavigateToR
       // 9. Fadiga geral
       {
         id: "fadigaGeral",
-        title: "Como estÃ¡ sua fadiga geral hoje?",
+        title: "Como está sua fadiga geral hoje?",
         subtitle: "0 = totalmente recuperado, 10 = extremamente cansado",
         render: () => (
           <TypeformSlider
@@ -320,13 +320,13 @@ const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack, onNavigateToR
       {
         id: "qualidadeSono",
         title: "Como foi a qualidade do seu sono?",
-        subtitle: "0 = pÃ©ssimo, 10 = excelente",
+        subtitle: "0 = péssimo, 10 = excelente",
         render: () => (
           <TypeformSlider
             value={formData.qualidadeSono}
             onChange={(v) => updateField("qualidadeSono", v)}
             onAutoAdvance={handleNext}
-            minLabel="PÃ©ssimo"
+            minLabel="Péssimo"
             maxLabel="Excelente"
           />
         ),
@@ -335,7 +335,7 @@ const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack, onNavigateToR
       // 11. Horas de sono
       {
         id: "horasSono",
-        title: "Quantas horas vocÃª dormiu?",
+        title: "Quantas horas você dormiu?",
         render: () => (
           <TypeformNumber
             value={formData.horasSono}
@@ -349,10 +349,10 @@ const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack, onNavigateToR
         ),
         canProceed: () => !!formData.horasSono,
       },
-      // 12. SensaÃ§Ã£o ao acordar
+      // 12. Sensação ao acordar
       {
         id: "sensacaoAcordar",
-        title: "Como vocÃª se sentiu ao acordar?",
+        title: "Como você se sentiu ao acordar?",
         render: () => (
           <TypeformSelect
             options={["Muito recuperado", "Recuperado", "Normal", "Cansado", "Muito cansado"]}
@@ -377,10 +377,10 @@ const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack, onNavigateToR
         ),
         canProceed: () => !!formData.pernasHoje,
       },
-      // 14. HidrataÃ§Ã£o
+      // 14. Hidratação
       {
         id: "hidratacao",
-        title: "Como estÃ¡ sua hidrataÃ§Ã£o?",
+        title: "Como está sua hidratação?",
         render: () => (
           <TypeformSelect
             options={["Adequada", "Moderada", "Baixa"]}
@@ -395,7 +395,7 @@ const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack, onNavigateToR
       {
         id: "corUrina",
         title: "Qual a cor da sua urina?",
-        subtitle: "Indicador de hidrataÃ§Ã£o",
+        subtitle: "Indicador de hidratação",
         render: () => (
           <TypeformSelect
             options={["Transparente", "Amarelo claro", "Amarelo escuro", "Muito escura"]}
@@ -406,13 +406,13 @@ const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack, onNavigateToR
         ),
         canProceed: () => !!formData.corUrina,
       },
-      // 16. RefeiÃ§Ã£o prÃ©-treino
+      // 16. Refeição pré-treino
       {
         id: "refeicaoPreTreino",
-        title: "Sua refeiÃ§Ã£o prÃ©-treino foi adequada?",
+        title: "Sua refeição pré-treino foi adequada?",
         render: () => (
           <TypeformSelect
-            options={["Sim", "NÃ£o"]}
+            options={["Sim", "Não"]}
             value={formData.refeicaoPreTreino}
             onChange={(v) => updateField("refeicaoPreTreino", v)}
             onAutoAdvance={handleNext}
@@ -420,10 +420,10 @@ const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack, onNavigateToR
         ),
         canProceed: () => !!formData.refeicaoPreTreino,
       },
-      // 17. CafeÃ­na
+      // 17. Cafeína
       {
         id: "cafeina",
-        title: "VocÃª consumiu cafeÃ­na hoje?",
+        title: "Você consumiu cafeína hoje?",
         render: () => (
           <TypeformYesNo
             value={formData.cafeina}
@@ -436,7 +436,7 @@ const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack, onNavigateToR
       // 18. Estresse
       {
         id: "estresseHoje",
-        title: "Qual seu nÃ­vel de estresse hoje?",
+        title: "Qual seu nível de estresse hoje?",
         subtitle: "0 = relaxado, 10 = muito estressado",
         render: () => (
           <TypeformSlider
@@ -452,7 +452,7 @@ const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack, onNavigateToR
       // 19. Foco
       {
         id: "focoConcentracao",
-        title: "Como estÃ¡ seu foco e concentraÃ§Ã£o?",
+        title: "Como está seu foco e concentração?",
         subtitle: "0 = disperso, 10 = muito focado",
         render: () => (
           <TypeformSlider
@@ -465,10 +465,10 @@ const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack, onNavigateToR
         ),
         canProceed: () => true,
       },
-      // 20. MotivaÃ§Ã£o
+      // 20. Motivação
       {
         id: "motivacaoTreino",
-        title: "Qual sua motivaÃ§Ã£o para treinar hoje?",
+        title: "Qual sua motivação para treinar hoje?",
         subtitle: "0 = sem vontade, 10 = super motivado",
         render: () => (
           <TypeformSlider
@@ -484,8 +484,8 @@ const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack, onNavigateToR
       // 21. Viagem
       {
         id: "teveViagem",
-        title: "VocÃª viajou recentemente?",
-        subtitle: "Viagens podem afetar recuperaÃ§Ã£o e desempenho",
+        title: "Você viajou recentemente?",
+        subtitle: "Viagens podem afetar recuperação e desempenho",
         render: () => (
           <TypeformYesNo
             value={formData.teveViagem}
@@ -498,10 +498,10 @@ const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack, onNavigateToR
       // 22. Clima
       {
         id: "climaSessao",
-        title: "Como estava o clima durante a sessÃ£o?",
+        title: "Como estava o clima durante a sessão?",
         render: () => (
           <TypeformSelect
-            options={["Frio", "AgradÃ¡vel", "Quente", "Muito quente", "Ãšmido"]}
+            options={["Frio", "Agradável", "Quente", "Muito quente", "Úmido"]}
             value={formData.climaSessao}
             onChange={(v) => updateField("climaSessao", v)}
             onAutoAdvance={handleNext}
@@ -513,7 +513,7 @@ const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack, onNavigateToR
       {
         id: "estresseExterno",
         title: "Algum estresse externo relevante hoje?",
-        subtitle: "FamÃ­lia, estudos, relacionamentos...",
+        subtitle: "Família, estudos, relacionamentos...",
         render: () => (
           <TypeformYesNo
             value={formData.estresseExterno}
@@ -524,16 +524,16 @@ const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack, onNavigateToR
         ),
         canProceed: () => !!formData.estresseExterno,
       },
-      // 24. ComentÃ¡rio final
+      // 24. Comentário final
       {
         id: "comentarioLivre",
         title: "Quer adicionar algo mais?",
-        subtitle: "Qualquer informaÃ§Ã£o extra que o GÃªmeo Digital deva saber",
+        subtitle: "Qualquer informação extra que o Gêmeo Digital deva saber",
         render: () => (
           <TypeformTextarea
             value={formData.comentarioLivre}
             onChange={(v) => updateField("comentarioLivre", v)}
-            placeholder="Ex: sensaÃ§Ã£o diferente na perna direita, semana com muito estresse..."
+            placeholder="Ex: sensação diferente na perna direita, semana com muito estresse..."
           />
         ),
         canProceed: () => true,
@@ -559,7 +559,7 @@ const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack, onNavigateToR
     if (currentQuestion > 0) {
       setCurrentQuestion((prev) => prev - 1);
     } else {
-      // Se estÃ¡ na primeira pergunta, volta para a tela de introduÃ§Ã£o
+      // Se está na primeira pergunta, volta para a tela de introdução
       setStep("intro");
     }
   };
@@ -616,7 +616,7 @@ const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack, onNavigateToR
       }
       toast({
         title: "Check-in enviado!",
-        description: "Seus dados foram processados pelo GÃªmeo Digital.",
+        description: "Seus dados foram processados pelo Gêmeo Digital.",
       });
       
       setStep("success");
@@ -724,5 +724,7 @@ const TypeformCheckin: React.FC<TypeformCheckinProps> = ({ onBack, onNavigateToR
 };
 
 export default TypeformCheckin;
+
+
 
 
