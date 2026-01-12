@@ -51,6 +51,13 @@ export const ChatAssistente = () => {
 
   const sendMessage = async () => {
     if (!input.trim()) return;
+    if (!functionUrl) {
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: "Servico de chat indisponivel no momento." },
+      ]);
+      return;
+    }
 
     const userMessage = { role: "user", content: input };
     setMessages((prev) => [...prev, userMessage]);
@@ -86,14 +93,19 @@ CONTEXTO ATUAL DO ANDREY (ultima analise):
       });
 
       const data = await response.json();
+      const content =
+        data.response ??
+        data.error ??
+        (response.ok ? "Sem resposta do assistente." : "Erro ao responder.");
 
-      const aiMessage = {
-        role: "assistant",
-        content: data.response ?? data.error ?? "Erro ao responder.",
-      };
+      const aiMessage = { role: "assistant", content };
       setMessages((prev) => [...prev, aiMessage]);
     } catch (error) {
       console.error("Erro no chat:", error);
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: "Erro ao responder. Tente novamente." },
+      ]);
     } finally {
       setLoading(false);
     }
