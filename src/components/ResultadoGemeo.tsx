@@ -1,7 +1,8 @@
 ﻿import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, MessageCircle, X, Send, Sparkles } from "lucide-react";
+import { ArrowLeft, MessageCircle, X, Sparkles } from "lucide-react";
 import oneAiLogo from "@/assets/one-ai-logo.jpg";
+import { ChatAssistente } from "@/components/ChatAssistente";
 
 interface ResultadoGemeoProps {
   onBack: () => void;
@@ -9,13 +10,6 @@ interface ResultadoGemeoProps {
 
 const ResultadoGemeo: React.FC<ResultadoGemeoProps> = ({ onBack }) => {
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [chatMessages, setChatMessages] = useState<Array<{ role: "user" | "assistant"; content: string }>>([
-    {
-      role: "assistant",
-      content: "Olá! Sou seu assistente do Gêmeo Digital. Posso responder perguntas sobre suas análises e recomendações. Como posso ajudar?"
-    }
-  ]);
-  const [inputMessage, setInputMessage] = useState("");
   const [analiseGemeo, setAnaliseGemeo] = useState<string>("");
   const [lastCheckInDate, setLastCheckInDate] = useState<string>("...");
   const [isLoadingAnalise, setIsLoadingAnalise] = useState(true);
@@ -102,23 +96,6 @@ const ResultadoGemeo: React.FC<ResultadoGemeoProps> = ({ onBack }) => {
     const interval = window.setInterval(fetchAnalise, 10000);
     return () => window.clearInterval(interval);
   }, [fetchAnalise]);
-  const handleSendMessage = () => {
-    if (!inputMessage.trim()) return;
-
-    // Adiciona mensagem do usuário
-    setChatMessages(prev => [...prev, { role: "user", content: inputMessage }]);
-    
-    // TODO: Integrar com IA real
-    // Simula resposta da IA
-    setTimeout(() => {
-      setChatMessages(prev => [...prev, {
-        role: "assistant",
-        content: "Entendi sua pergunta. Em breve estarei conectado ao histórico completo das suas análises para fornecer respostas mais precisas."
-      }]);
-    }, 1000);
-
-    setInputMessage("");
-  };
 
   return (
     <div className="min-h-screen gradient-hero text-foreground">
@@ -192,7 +169,7 @@ const ResultadoGemeo: React.FC<ResultadoGemeoProps> = ({ onBack }) => {
           {/* <div className="absolute inset-0 flex items-center justify-center bg-background/50 backdrop-blur-sm rounded-xl">
             <div className="flex flex-col items-center gap-3">
               <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent" />
-              <p className="text-sm text-muted-foreground">Carregando análise...</p>
+              <p className="text-sm text-muted-foreground">Carregando analise...</p>
             </div>
           </div> */}
         </motion.div>
@@ -204,7 +181,7 @@ const ResultadoGemeo: React.FC<ResultadoGemeoProps> = ({ onBack }) => {
           transition={{ delay: 0.2 }}
           className="text-xs text-muted-foreground/70 text-center mt-6"
         >
-          💡 Use o chat no canto inferior direito para tirar dúvidas sobre sua análise
+          Use o chat no canto inferior direito para tirar duvidas sobre sua analise
         </motion.p>
       </main>
 
@@ -215,71 +192,20 @@ const ResultadoGemeo: React.FC<ResultadoGemeoProps> = ({ onBack }) => {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-24 right-6 w-96 max-w-[calc(100vw-3rem)] h-[500px] bg-card border border-border rounded-2xl shadow-2xl flex flex-col overflow-hidden z-40"
+            className="fixed bottom-24 right-6 w-96 max-w-[calc(100vw-3rem)] h-[500px] bg-card border border-border rounded-2xl shadow-2xl flex flex-col overflow-hidden z-40 relative"
           >
-            {/* Chat Header */}
-            <div className="px-4 py-3 bg-primary/10 border-b border-border flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <img 
-                  src={oneAiLogo} 
-                  alt="AI Assistant" 
-                  className="h-8 w-8 rounded-lg object-cover"
-                />
-                <div>
-                  <h3 className="font-semibold text-sm">Assistente IA</h3>
-                  <p className="text-xs text-muted-foreground">Tire suas dúvidas</p>
-                </div>
-              </div>
-              <button
-                onClick={() => setIsChatOpen(false)}
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Chat Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {chatMessages.map((msg, index) => (
-                <div
-                  key={index}
-                  className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-                >
-                  <div
-                    className={`max-w-[80%] rounded-2xl px-4 py-2 ${
-                      msg.role === "user"
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted text-foreground"
-                    }`}
-                  >
-                    <p className="text-sm">{msg.content}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Chat Input */}
-            <div className="p-4 border-t border-border">
-              <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  value={inputMessage}
-                  onChange={(e) => setInputMessage(e.target.value)}
-                  onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-                  placeholder="Faça uma pergunta..."
-                  className="flex-1 px-4 py-2 bg-muted rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-                <button
-                  onClick={handleSendMessage}
-                  className="w-10 h-10 rounded-xl bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 transition-colors"
-                >
-                  <Send className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
+            <button
+              onClick={() => setIsChatOpen(false)}
+              className="absolute top-3 right-3 text-muted-foreground hover:text-foreground transition-colors z-10"
+              aria-label="Fechar chat"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <ChatAssistente />
           </motion.div>
         )}
       </AnimatePresence>
+
 
       {/* Chat Button */}
       <motion.button
