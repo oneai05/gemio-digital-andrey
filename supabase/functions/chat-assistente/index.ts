@@ -1,4 +1,4 @@
-import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+/// <reference types="https://esm.sh/@supabase/functions-js/src/edge-runtime.d.ts" />
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -49,41 +49,56 @@ ${contexto ? `ANALISE MAIS RECENTE DO ANDREY:\n${contexto}` : ""}
       { role: "user", content: message },
     ];
 
-    const claudeApiKey = Deno.env.get("CLAUDE_API_KEY");
-    if (!claudeApiKey) {
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) {
       return new Response(
-        JSON.stringify({ error: "CLAUDE_API_KEY not configured" }),
+        JSON.stringify({ error: "LOVABLE_API_KEY not configured" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": claudeApiKey,
-        "anthropic-version": "2023-06-01",
+        "Authorization": `Bearer ${LOVABLE_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "claude-3-haiku-20240307",
+        model: "google/gemini-3-flash-preview",
         max_tokens: 500,
         messages: mensagens,
       }),
     });
 
-    const data = await response.json();
     if (!response.ok) {
+      if (response.status === 429) {
+        return new Response(
+          JSON.stringify({ error: "Rate limit exceeded. Tente novamente em alguns segundos." }),
+          { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      if (response.status === 402) {
+        return new Response(
+          JSON.stringify({ error: "Créditos insuficientes. Adicione créditos no workspace Lovable." }),
+          { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      const errorText = await response.text();
+      console.error("AI gateway error:", response.status, errorText);
       return new Response(
-        JSON.stringify({ error: data?.error?.message || "Erro na API Claude" }),
+        JSON.stringify({ error: "Erro na API de IA" }),
         { status: response.status, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    const aiResponse = data?.content?.[0]?.text ?? "";
+    const data = await response.json();
+    const aiResponse = data?.choices?.[0]?.message?.content ?? "";
+    
     return new Response(JSON.stringify({ response: aiResponse }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (error) {
+    console.error("Chat error:", error);
     return new Response(
       JSON.stringify({
         error: "Erro interno do servidor",
