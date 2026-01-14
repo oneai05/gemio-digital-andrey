@@ -1,57 +1,18 @@
 // components/ChatAssistente.jsx
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import oneAiLogo from "@/assets/one-ai-logo.jpg";
-import { supabase } from "@/lib/supabase";
 
 export const ChatAssistente = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [ultimaAnalise, setUltimaAnalise] = useState(null);
-  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-  const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-  const functionUrl = supabaseUrl ? `${supabaseUrl}/functions/v1/chat-assistente-v2` : "";
-
-  // Buscar ultima analise do Supabase
-  useEffect(() => {
-    const fetchUltimaAnalise = async () => {
-      const { data } = await supabase
-        .from("gemeo_digital_analises")
-        .select("*")
-        .eq("athlete_id", "andrey_santos")
-        .order("created_at", { ascending: false })
-        .limit(1);
-
-      if (data?.[0]) {
-        setUltimaAnalise(data[0]);
-      }
-    };
-
-    fetchUltimaAnalise();
-
-    // Realtime para novas analises
-    const subscription = supabase
-      .channel("analises-chat")
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "gemeo_digital_analises",
-          filter: "athlete_id=eq.andrey_santos",
-        },
-        (payload) => {
-          setUltimaAnalise(payload.new);
-        }
-      )
-      .subscribe();
-
-    return () => subscription.unsubscribe();
-  }, []);
+  const webhookUrl =
+    import.meta.env.VITE_CHAT_WEBHOOK_URL ||
+    "https://oneai.app.n8n.cloud/webhook/fc725edb-26c9-4c5a-a072-0a75c3d9bc2d";
 
   const sendMessage = async () => {
     if (!input.trim()) return;
-    if (!functionUrl) {
+    if (!webhookUrl) {
       setMessages((prev) => [
         ...prev,
         { role: "assistant", content: "Servico de chat indisponivel no momento." },
@@ -65,29 +26,13 @@ export const ChatAssistente = () => {
     setLoading(true);
 
     try {
-      // Contexto baseado na ultima analise
-      const contexto = ultimaAnalise
-        ? `
-CONTEXTO ATUAL DO ANDREY (ultima analise):
-- Data: ${ultimaAnalise.created_at}
-- Treino: ${ultimaAnalise.treino_explicacao}
-- Recuperacao: ${ultimaAnalise.recuperacao_explicacao}
-- Nutricao: ${ultimaAnalise.nutricao_explicacao}
-- Insights Geneticos: ${ultimaAnalise.insights_geneticos_explicacao}
-- Monitoramento: ${ultimaAnalise.monitoramento_explicacao}
-      `
-        : "";
-
-      const response = await fetch(functionUrl, {
+      const response = await fetch(webhookUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${supabaseAnonKey}`,
-          apikey: supabaseAnonKey,
         },
         body: JSON.stringify({
           message: input,
-          contexto: contexto,
           conversaAnterior: messages.slice(-6),
         }),
       });
