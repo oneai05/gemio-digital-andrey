@@ -1,13 +1,14 @@
-/// <reference types="https://esm.sh/@supabase/functions-js/src/edge-runtime.d.ts" />
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-Deno.serve(async (req) => {
+serve(async (req) => {
+  // Handle CORS preflight
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+    return new Response(null, { headers: corsHeaders });
   }
 
   if (req.method !== "POST") {
@@ -19,6 +20,7 @@ Deno.serve(async (req) => {
 
   try {
     const { message, contexto, conversaAnterior } = await req.json();
+    console.log("Received message:", message);
 
     const contextoBase = `
 VOCE E O ASSISTENTE ESPECIALIZADO DO GEMEO DIGITAL DO ANDREY SANTOS.
@@ -51,12 +53,14 @@ ${contexto ? `ANALISE MAIS RECENTE DO ANDREY:\n${contexto}` : ""}
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
+      console.error("LOVABLE_API_KEY not found");
       return new Response(JSON.stringify({ error: "LOVABLE_API_KEY not configured" }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
+    console.log("Calling Lovable AI Gateway...");
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -71,18 +75,18 @@ ${contexto ? `ANALISE MAIS RECENTE DO ANDREY:\n${contexto}` : ""}
     });
 
     if (!response.ok) {
-      const t = await response.text();
-      console.error("AI gateway error:", response.status, t);
+      const errorText = await response.text();
+      console.error("AI gateway error:", response.status, errorText);
 
       if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Rate limit exceeded. Tente novamente." }), {
+        return new Response(JSON.stringify({ error: "Rate limit exceeded. Tente novamente em alguns segundos." }), {
           status: 429,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
 
       if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "Créditos insuficientes no Lovable AI." }), {
+        return new Response(JSON.stringify({ error: "Creditos insuficientes no Lovable AI." }), {
           status: 402,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
@@ -96,6 +100,7 @@ ${contexto ? `ANALISE MAIS RECENTE DO ANDREY:\n${contexto}` : ""}
 
     const data = await response.json();
     const aiResponse = data?.choices?.[0]?.message?.content ?? "";
+    console.log("AI response received:", aiResponse.substring(0, 100));
 
     return new Response(
       JSON.stringify({

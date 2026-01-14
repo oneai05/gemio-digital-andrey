@@ -37,6 +37,8 @@ export const ChatAssistente = () => {
         }),
       });
 
+      console.log("Response status:", response.status);
+
       const data = await response.json();
       const content =
         data.response ??

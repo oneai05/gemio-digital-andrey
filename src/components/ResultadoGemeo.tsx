@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, MessageCircle, X, Sparkles } from "lucide-react";
 import oneAiLogo from "@/assets/one-ai-logo.jpg";
@@ -16,6 +16,7 @@ const ResultadoGemeo: React.FC<ResultadoGemeoProps> = ({ onBack }) => {
   const [analiseError, setAnaliseError] = useState<string>("");
   const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
   const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
+  
   const buildAnaliseText = (payload: Record<string, string | null>) => {
     const sections = [
       { title: "Treino", value: payload.treino_explicacao },
@@ -164,14 +165,6 @@ const ResultadoGemeo: React.FC<ResultadoGemeoProps> = ({ onBack }) => {
               {!isLoadingAnalise && !analiseError && analiseGemeo}
             </div>
           </div>
-
-          {/* Loading indicator (para quando estiver carregando dados reais) */}
-          {/* <div className="absolute inset-0 flex items-center justify-center bg-background/50 backdrop-blur-sm rounded-xl">
-            <div className="flex flex-col items-center gap-3">
-              <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent" />
-              <p className="text-sm text-muted-foreground">Carregando analise...</p>
-            </div>
-          </div> */}
         </motion.div>
 
         {/* Info adicional */}
@@ -192,8 +185,8 @@ const ResultadoGemeo: React.FC<ResultadoGemeoProps> = ({ onBack }) => {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-24 right-6 left-auto w-96 max-w-[calc(100vw-3rem)] h-[500px] bg-card border border-border rounded-2xl shadow-2xl flex flex-col overflow-hidden z-40 relative"
-            style={{ right: "1.5rem", bottom: "6rem" }}
+            style={{ position: 'fixed', bottom: '6rem', right: '1.5rem', left: 'auto' }}
+            className="w-96 max-w-[calc(100vw-3rem)] h-[500px] bg-card border border-border rounded-2xl shadow-2xl flex flex-col overflow-hidden z-40"
           >
             <button
               onClick={() => setIsChatOpen(false)}
@@ -206,7 +199,6 @@ const ResultadoGemeo: React.FC<ResultadoGemeoProps> = ({ onBack }) => {
           </motion.div>
         )}
       </AnimatePresence>
-
 
       {/* Chat Button */}
       <motion.button
