@@ -1,39 +1,15 @@
 // components/ChatAssistente.jsx
 import { useState, useRef, useEffect } from "react";
 import oneAiLogo from "@/assets/one-ai-logo.jpg";
-import { supabase } from "@/lib/supabase";
 
 export const ChatAssistente = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [contexto, setContexto] = useState(null);
   const messagesEndRef = useRef(null);
 
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
   const functionUrl = `${supabaseUrl}/functions/v1/chat-assistente-v2`;
-
-  // Buscar contexto da última análise do atleta
-  useEffect(() => {
-    const fetchContexto = async () => {
-      try {
-        const { data, error } = await supabase
-          .from("analises_gemeo_digital")
-          .select("analise_completa, created_at")
-          .order("created_at", { ascending: false })
-          .limit(1)
-          .single();
-
-        if (data && !error) {
-          setContexto(data.analise_completa);
-        }
-      } catch (err) {
-        console.log("Sem contexto de análise disponível");
-      }
-    };
-
-    fetchContexto();
-  }, []);
 
   // Auto-scroll para última mensagem
   useEffect(() => {
@@ -59,19 +35,19 @@ export const ChatAssistente = () => {
         },
         body: JSON.stringify({
           message: input,
-          contexto: contexto,
-          conversaAnterior: messages.slice(-6),
+          athlete_id: "andrey_santos",
+          timestamp: new Date().toISOString(),
         }),
       });
 
-      console.log("n8n Response status:", response.status);
+      console.log("Response status:", response.status);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log("n8n Response data:", data);
+      console.log("Response data:", data);
 
       // O n8n pode retornar a resposta em diferentes formatos
       const content =
@@ -109,9 +85,7 @@ export const ChatAssistente = () => {
         />
         <div>
           <h3 className="font-semibold text-sm">Assistente IA</h3>
-          <p className="text-xs text-muted-foreground">
-            {contexto ? "Conectado à sua análise" : "Tire suas dúvidas"}
-          </p>
+          <p className="text-xs text-muted-foreground">Tire suas dúvidas</p>
         </div>
       </div>
 
