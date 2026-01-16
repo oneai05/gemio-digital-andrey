@@ -1,24 +1,46 @@
 // components/ChatAssistente.jsx
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import oneAiLogo from "@/assets/one-ai-logo.jpg";
+import { supabase } from "@/lib/supabase";
 
 export const ChatAssistente = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const webhookUrl =
-    import.meta.env.VITE_CHAT_WEBHOOK_URL ||
-    "https://oneai.app.n8n.cloud/webhook/fc725edb-26c9-4c5a-a072-0a75c3d9bc2d";
+  const [contexto, setContexto] = useState(null);
+  const messagesEndRef = useRef(null);
+
+  const webhookUrl = "https://oneai.app.n8n.cloud/webhook/fc725edb-26c9-4c5a-a072-0a75c3d9bc2d";
+
+  // Buscar contexto da última análise do atleta
+  useEffect(() => {
+    const fetchContexto = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("analises_gemeo_digital")
+          .select("analise_completa, created_at")
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .single();
+
+        if (data && !error) {
+          setContexto(data.analise_completa);
+        }
+      } catch (err) {
+        console.log("Sem contexto de análise disponível");
+      }
+    };
+
+    fetchContexto();
+  }, []);
+
+  // Auto-scroll para última mensagem
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const sendMessage = async () => {
-    if (!input.trim()) return;
-    if (!webhookUrl) {
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: "Servico de chat indisponivel no momento." },
-      ]);
-      return;
-    }
+    if (!input.trim() || loading) return;
 
     const userMessage = { role: "user", content: input };
     setMessages((prev) => [...prev, userMessage]);
@@ -33,17 +55,28 @@ export const ChatAssistente = () => {
         },
         body: JSON.stringify({
           message: input,
+          contexto: contexto,
           conversaAnterior: messages.slice(-6),
         }),
       });
 
-      console.log("Response status:", response.status);
+      console.log("n8n Response status:", response.status);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
       const data = await response.json();
+      console.log("n8n Response data:", data);
+
+      // O n8n pode retornar a resposta em diferentes formatos
       const content =
-        data.response ??
-        data.error ??
-        (response.ok ? "Sem resposta do assistente." : "Erro ao responder.");
+        data.response ||
+        data.output ||
+        data.text ||
+        data.message ||
+        (typeof data === "string" ? data : null) ||
+        "Sem resposta do assistente.";
 
       const aiMessage = { role: "assistant", content };
       setMessages((prev) => [...prev, aiMessage]);
@@ -51,7 +84,10 @@ export const ChatAssistente = () => {
       console.error("Erro no chat:", error);
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: "Erro ao responder. Tente novamente." },
+        {
+          role: "assistant",
+          content: "Erro ao conectar com o assistente. Verifique a conexão e tente novamente.",
+        },
       ]);
     } finally {
       setLoading(false);
@@ -69,7 +105,9 @@ export const ChatAssistente = () => {
         />
         <div>
           <h3 className="font-semibold text-sm">Assistente IA</h3>
-          <p className="text-xs text-muted-foreground">Tire suas duvidas</p>
+          <p className="text-xs text-muted-foreground">
+            {contexto ? "Conectado à sua análise" : "Tire suas dúvidas"}
+          </p>
         </div>
       </div>
 
@@ -77,8 +115,8 @@ export const ChatAssistente = () => {
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.length === 0 && (
           <div className="text-muted-foreground text-sm">
-            Ola! Sou seu assistente do Gemeo Digital. Posso responder perguntas
-            sobre suas analises e recomendacoes. Como posso ajudar?
+            Olá! Sou seu assistente do Gêmeo Digital. Posso responder perguntas
+            sobre suas análises e recomendações. Como posso ajudar?
           </div>
         )}
 
@@ -88,7 +126,7 @@ export const ChatAssistente = () => {
             className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
           >
             <div
-              className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm ${
+              className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm whitespace-pre-wrap ${
                 msg.role === "user"
                   ? "bg-primary text-primary-foreground"
                   : "bg-muted text-foreground"
@@ -110,6 +148,8 @@ export const ChatAssistente = () => {
             </div>
           </div>
         )}
+
+        <div ref={messagesEndRef} />
       </div>
 
       {/* Input */}
@@ -119,18 +159,31 @@ export const ChatAssistente = () => {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-            placeholder="Faca uma pergunta..."
+            onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && sendMessage()}
+            placeholder="Faça uma pergunta..."
             className="flex-1 px-4 py-2 bg-muted rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary"
             disabled={loading}
           />
           <button
             onClick={sendMessage}
             disabled={loading || !input.trim()}
-            className="w-10 h-10 rounded-xl bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 transition-colors"
+            className="w-10 h-10 rounded-xl bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 transition-colors disabled:opacity-50"
             aria-label="Enviar"
           >
-            &gt;
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="m22 2-7 20-4-9-9-4Z" />
+              <path d="M22 2 11 13" />
+            </svg>
           </button>
         </div>
       </div>
