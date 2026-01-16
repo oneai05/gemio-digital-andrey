@@ -13,14 +13,14 @@ serve(async (req) => {
   }
 
   try {
-    const { message, contexto, conversaAnterior } = await req.json();
+    const { message, athlete_id, timestamp } = await req.json();
     
-    console.log("Received request:", { message, hasContexto: !!contexto, conversaCount: conversaAnterior?.length || 0 });
+    console.log("Received request:", { message, athlete_id, timestamp });
 
     const n8nResponse = await fetch(N8N_WEBHOOK_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message, contexto, conversaAnterior }),
+      body: JSON.stringify({ message, athlete_id, timestamp }),
     });
 
     console.log("n8n response status:", n8nResponse.status);
