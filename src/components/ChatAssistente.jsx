@@ -10,7 +10,8 @@ export const ChatAssistente = () => {
   const [contexto, setContexto] = useState(null);
   const messagesEndRef = useRef(null);
 
-  const webhookUrl = "https://oneai.app.n8n.cloud/webhook/fc725edb-26c9-4c5a-a072-0a75c3d9bc2d";
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+  const functionUrl = `${supabaseUrl}/functions/v1/chat-assistente-v2`;
 
   // Buscar contexto da última análise do atleta
   useEffect(() => {
@@ -48,10 +49,13 @@ export const ChatAssistente = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(webhookUrl, {
+      console.log("Calling edge function:", functionUrl);
+      
+      const response = await fetch(functionUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "apikey": import.meta.env.VITE_SUPABASE_ANON_KEY,
         },
         body: JSON.stringify({
           message: input,

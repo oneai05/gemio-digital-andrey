@@ -5,118 +5,47 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+const N8N_WEBHOOK_URL = "https://oneai.app.n8n.cloud/webhook/fc725edb-26c9-4c5a-a072-0a75c3d9bc2d";
+
 serve(async (req) => {
-  // Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
-  if (req.method !== "POST") {
-    return new Response(JSON.stringify({ error: "Method not allowed" }), {
-      status: 405,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
-  }
-
   try {
     const { message, contexto, conversaAnterior } = await req.json();
-    console.log("Received message:", message);
+    
+    console.log("Received request:", { message, hasContexto: !!contexto, conversaCount: conversaAnterior?.length || 0 });
 
-    const contextoBase = `
-VOCE E O ASSISTENTE ESPECIALIZADO DO GEMEO DIGITAL DO ANDREY SANTOS.
-
-PERFIL GENETICO DO ANDREY:
-• COL5A1 CC = Tendoes 80% mais sensiveis a cargas elevadas
-• TNF-A GG + CRP GG = Resposta inflamatoria 3x mais intensa
-• MMP3 desfavoravel = Recuperacao tecidual 48h+ necessaria
-• CYP1A2 lento = Metabolismo de estimulantes 8-12h
-• CLOCK T/T = Cronotipo diurno, performance otima manha/tarde
-• ACE DD + ACTN3 RR = Potencial forca/potencia quando recuperado
-
-DIRETRIZES:
-- Use linguagem tecnico-humanizada (acessivel mas precisa)
-- Sempre correlacione respostas com o genotipo especifico do Andrey
-- Explique o "porque" cientifico de forma natural
-- Para nutricao: use categorias funcionais, nunca produtos especificos
-- Seja conversacional mas profissional
-- Responda em portugues brasileiro
-- Mantenha respostas concisas (maximo 4-5 frases)
-
-${contexto ? `ANALISE MAIS RECENTE DO ANDREY:\n${contexto}` : ""}
-    `;
-
-    const mensagens = [
-      { role: "system", content: contextoBase },
-      ...(Array.isArray(conversaAnterior) ? conversaAnterior : []),
-      { role: "user", content: message },
-    ];
-
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) {
-      console.error("LOVABLE_API_KEY not found");
-      return new Response(JSON.stringify({ error: "LOVABLE_API_KEY not configured" }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
-    console.log("Calling Lovable AI Gateway...");
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const n8nResponse = await fetch(N8N_WEBHOOK_URL, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
-        max_tokens: 500,
-        messages: mensagens,
-      }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message, contexto, conversaAnterior }),
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("AI gateway error:", response.status, errorText);
+    console.log("n8n response status:", n8nResponse.status);
 
-      if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Rate limit exceeded. Tente novamente em alguns segundos." }), {
-          status: 429,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-
-      if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "Creditos insuficientes no Lovable AI." }), {
-          status: 402,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-
-      return new Response(JSON.stringify({ error: "Erro na API de IA" }), {
-        status: response.status,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+    if (!n8nResponse.ok) {
+      const errorText = await n8nResponse.text();
+      console.error("n8n error:", errorText);
+      return new Response(
+        JSON.stringify({ error: "Erro ao conectar com o assistente n8n" }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
-    const data = await response.json();
-    const aiResponse = data?.choices?.[0]?.message?.content ?? "";
-    console.log("AI response received:", aiResponse.substring(0, 100));
+    const data = await n8nResponse.json();
+    console.log("n8n response data:", JSON.stringify(data).substring(0, 200));
 
     return new Response(
-      JSON.stringify({
-        response: aiResponse,
-        provider: "lovable-ai",
-        model: "google/gemini-3-flash-preview",
-      }),
+      JSON.stringify(data),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
-  } catch (error) {
-    console.error("Chat error:", error);
+  } catch (err: unknown) {
+    console.error("Edge function error:", err);
+    const errorMessage = err instanceof Error ? err.message : "Erro interno";
     return new Response(
-      JSON.stringify({
-        error: "Erro interno do servidor",
-        response: "Desculpe, tive um problema tecnico. Tente novamente em alguns segundos.",
-      }),
+      JSON.stringify({ error: errorMessage }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
